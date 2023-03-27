@@ -47,6 +47,7 @@ class MainActivity : ComponentActivity() {
 fun TipAndSplitScreen() {
 
     var amountInput by remember { mutableStateOf("") }
+    var people by remember { mutableStateOf("") }
 
     val amount = amountInput.toDoubleOrNull() ?: 0.0
     val tip = calculateTip(amount)
@@ -62,8 +63,15 @@ fun TipAndSplitScreen() {
             label = R.string.bill_amount,
             value = amountInput,
             onValueChange = { amountInput = it },
-            icon_resource = R.drawable.ic_baseline_monetization_on_24)
+            icon_resource = R.drawable.ic_money)
+        Spacer(Modifier.height(5.dp))
+        EditNumberField(
+            label = R.string.split_bill,
+            value = people,
+            onValueChange = { people = it },
+            icon_resource = R.drawable.ic_people)
         Spacer(Modifier.height(24.dp))
+
         Slider_4()
         Row() {
             Text(
@@ -86,6 +94,15 @@ fun TipAndSplitScreen() {
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
+        Text(
+            text = stringResource(id = R.string.person_total, ""),
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+
+
 
 
     }

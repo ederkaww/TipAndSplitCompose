@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">TipAndSplitCompose</string>
-    <string name="bill_amount">Bill Amount</string>
+    <string name="bill_amount">Bill amount</string>
     <string name="tip_percent">Tip percent: %s</string>
     <string name="tip_amount">Tip amount: %s</string>
     <string name="grand_total">Grand total: %s</string>
+    <string name="person_total">Person total: %s</string>
     <string name="how_good">Tip (%)</string>
+    <string name="split_bill">No. of people </string>
     <string name="round_up_tip">Round up tip?</string>
 </resources>
