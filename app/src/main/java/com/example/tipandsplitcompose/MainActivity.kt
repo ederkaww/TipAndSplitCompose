@@ -8,9 +8,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,7 +23,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.sp
 import java.text.NumberFormat
 
@@ -65,13 +61,13 @@ fun TipAndSplitScreen() {
             onValueChange = { amountInput = it },
             icon_resource = R.drawable.ic_baseline_monetization_on_24)
         Spacer(Modifier.height(24.dp))
+        Slider_4()
         Text(
             text = stringResource(R.string.tip_amount, tip),
             modifier = Modifier.align(Alignment.CenterHorizontally),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-
 
     }
 }
@@ -98,6 +94,40 @@ fun EditNumberField(
             tint = Color.Gray,
             modifier = Modifier.size(size = 30.dp) )}
 
+    )
+}
+
+@Composable
+private fun Slider_4() {
+
+//    var sliderValue by remember {
+//        mutableStateOf(0f)
+//    }
+//
+//    Slider(
+//        value = sliderValue,
+//        onValueChange = { sliderValue_ ->
+//            sliderValue = sliderValue_
+//        },
+//        onValueChangeFinished = {
+//            // this is called when the user completed selecting the value
+//            Log.d("MainActivity", "sliderValue = $sliderValue")
+//        },
+//        valueRange = 0f..10f,
+//        steps = 4
+//    )
+
+    var sliderValue by remember {
+        mutableStateOf(0)
+    }
+
+    Text(text = "How was the service? "+ sliderValue.toString())
+    Slider(value = sliderValue.toFloat(), onValueChange = { sliderValue_ ->
+        sliderValue = sliderValue_.toInt()
+    }, onValueChangeFinished = {
+        // funkcja liczaca tip w zaleznosci od jakosci serwisu
+        // this is called when the user completed selecting the value
+    }, valueRange = 0f..2f, steps = 1
     )
 }
 
