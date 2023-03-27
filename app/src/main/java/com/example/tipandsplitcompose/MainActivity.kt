@@ -47,8 +47,11 @@ class MainActivity : ComponentActivity() {
 fun TipAndSplitScreen() {
 
     var amountInput by remember { mutableStateOf("") }
+
     val amount = amountInput.toDoubleOrNull() ?: 0.0
     val tip = calculateTip(amount)
+
+    var roundUp by remember { mutableStateOf(false) }
 
     Column (
         modifier = Modifier.padding(32.dp),
@@ -62,12 +65,28 @@ fun TipAndSplitScreen() {
             icon_resource = R.drawable.ic_baseline_monetization_on_24)
         Spacer(Modifier.height(24.dp))
         Slider_4()
+        Row() {
+            Text(
+                text = stringResource(R.string.tip_percent, ""),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(Modifier.width(75.dp))
+            Text(
+                text = stringResource(R.string.tip_amount, tip),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        RoundTheTipRow(roundUp = roundUp, onRoundUpChanged = { roundUp = it })
+        Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = stringResource(R.string.tip_amount, tip),
+            text = stringResource(id = R.string.grand_total, ""),
             modifier = Modifier.align(Alignment.CenterHorizontally),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
+
 
     }
 }
@@ -100,22 +119,6 @@ fun EditNumberField(
 @Composable
 private fun Slider_4() {
 
-//    var sliderValue by remember {
-//        mutableStateOf(0f)
-//    }
-//
-//    Slider(
-//        value = sliderValue,
-//        onValueChange = { sliderValue_ ->
-//            sliderValue = sliderValue_
-//        },
-//        onValueChangeFinished = {
-//            // this is called when the user completed selecting the value
-//            Log.d("MainActivity", "sliderValue = $sliderValue")
-//        },
-//        valueRange = 0f..10f,
-//        steps = 4
-//    )
 
     var sliderValue by remember {
         mutableStateOf(0)
@@ -127,8 +130,34 @@ private fun Slider_4() {
     }, onValueChangeFinished = {
         // funkcja liczaca tip w zaleznosci od jakosci serwisu
         // this is called when the user completed selecting the value
-    }, valueRange = 0f..2f, steps = 1
+    }, valueRange = 1f..3f, steps = 1
     )
+}
+
+@Composable
+fun RoundTheTipRow(
+    roundUp: Boolean,
+    onRoundUpChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier) {
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .size(48.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = stringResource(id = R.string.round_up_tip))
+        Switch(
+            modifier = modifier
+                .fillMaxWidth()
+                .wrapContentWidth(Alignment.End),
+            checked = roundUp,
+            onCheckedChange = onRoundUpChanged,
+            colors = SwitchDefaults.colors(
+                uncheckedThumbColor = Color.DarkGray
+            )
+        )
+    }
 }
 
 private fun calculateTip(
