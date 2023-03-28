@@ -59,9 +59,11 @@ fun TipAndSplitScreen() {
     val people = peopleInput.toIntOrNull() ?: 1
 
 
-    val tip = calculateTip(amount)
+    val tipNr = calculateTip(amount)
+    val tip = NumberFormat.getCurrencyInstance().format(tipNr)
 
-    val grandTotal = calculateTotal()
+    val grandTotal = calculateTotal(amount, tipNr)
+    val personTotal = calculateTotal(amount, tipNr, people)
 
     var roundUp by remember { mutableStateOf(false) }
 
@@ -115,13 +117,13 @@ fun TipAndSplitScreen() {
         RoundTheTipRow(roundUp = roundUp, onRoundUpChanged = { roundUp = it })
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = stringResource(id = R.string.grand_total, ""),
+            text = stringResource(id = R.string.grand_total, grandTotal),
             modifier = Modifier.align(Alignment.CenterHorizontally),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = stringResource(id = R.string.person_total, ""),
+            text = stringResource(id = R.string.person_total, personTotal),
             modifier = Modifier.align(Alignment.CenterHorizontally),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
@@ -204,17 +206,19 @@ fun RoundTheTipRow(
 private fun calculateTip(
     amount: Double,
     tipPercent: Double = 15.0
-) : String {
-    val tip = tipPercent / 100 * amount
-    return NumberFormat.getCurrencyInstance().format(tip)
+) : Double {
+    return tipPercent / 100 * amount
 }
 
 private fun calculateTotal(
     amount: Double,
-    tip:
-
+    tip: Double,
+    people: Int = 1
 ) : String {
 
+    val total = (amount + tip) / people
+
+    return NumberFormat.getCurrencyInstance().format(total)
 }
 
 
