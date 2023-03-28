@@ -60,7 +60,11 @@ fun TipAndSplitScreen() {
 
     var roundUp by remember { mutableStateOf(false) }
 
-    val tipNr = calculateTip(amount)
+    var sliderValue by remember { mutableStateOf(0) }
+
+    val tipPercent = calculateTipPercent(sliderValue)
+
+    val tipNr = calculateTip(amount, tipPercent)
     val tip = NumberFormat.getCurrencyInstance().format(tipNr)
 
     val grandTotalNr = calculateTotal(amount, tipNr, roundUp = roundUp)
@@ -68,7 +72,6 @@ fun TipAndSplitScreen() {
 
     val personTotal = calculatePersonTotal(grandTotalNr, people)
 
-    var sliderValue by remember { mutableStateOf(0) }
 
 
     Column (
@@ -112,7 +115,7 @@ fun TipAndSplitScreen() {
         )
         Row() {
             Text(
-                text = stringResource(R.string.tip_percent, ""),
+                text = stringResource(R.string.tip_percent, tipPercent.toInt()),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -178,14 +181,12 @@ private fun Slider_4(
 
 
 
-    Text(text = "How was the service? "+ sliderValue.toString())
+    Text(text = stringResource(R.string.service_question))
     Slider(
         value = sliderValue.toFloat(),
         onValueChange = onValueChange,
-        onValueChangeFinished = {
-        // funkcja liczaca tip w zaleznosci od jakosci serwisu
-        // this is called when the user completed selecting the value
-    }, valueRange = 1f..3f, steps = 1
+        valueRange = 1f..3f,
+        steps = 1
     )
 }
 
@@ -214,6 +215,20 @@ fun RoundTheTipRow(
         )
     }
 }
+
+private fun calculateTipPercent(
+    sliderValue: Int
+) : Double {
+
+    val tipPercent = when(sliderValue) {
+        3 -> 20.0
+        2 -> 18.0
+        else -> 15.0
+    }
+
+    return tipPercent
+}
+
 
 private fun calculateTip(
     amount: Double,
