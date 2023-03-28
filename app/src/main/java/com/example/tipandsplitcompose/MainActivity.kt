@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -18,10 +19,13 @@ import com.example.tipandsplitcompose.ui.theme.TipAndSplitComposeTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
 import java.text.NumberFormat
@@ -46,11 +50,18 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TipAndSplitScreen() {
 
-    var amountInput by remember { mutableStateOf("") }
-    var people by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
 
+    var amountInput by remember { mutableStateOf("") }
     val amount = amountInput.toDoubleOrNull() ?: 0.0
+
+    var peopleInput by remember { mutableStateOf("") }
+    val people = peopleInput.toIntOrNull() ?: 1
+
+
     val tip = calculateTip(amount)
+
+    val grandTotal = calculateTotal()
 
     var roundUp by remember { mutableStateOf(false) }
 
@@ -62,14 +73,29 @@ fun TipAndSplitScreen() {
         EditNumberField(
             label = R.string.bill_amount,
             value = amountInput,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            ),
             onValueChange = { amountInput = it },
-            icon_resource = R.drawable.ic_money)
+            icon_resource = R.drawable.ic_money,
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            ),
+        )
         Spacer(Modifier.height(5.dp))
         EditNumberField(
             label = R.string.split_bill,
-            value = people,
-            onValueChange = { people = it },
-            icon_resource = R.drawable.ic_people)
+            value = peopleInput,
+            onValueChange = { peopleInput = it },
+            icon_resource = R.drawable.ic_people,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { focusManager.clearFocus() })
+        )
         Spacer(Modifier.height(24.dp))
 
         Slider_4()
@@ -101,10 +127,6 @@ fun TipAndSplitScreen() {
             fontWeight = FontWeight.Bold
         )
 
-
-
-
-
     }
 }
 
@@ -115,15 +137,18 @@ fun EditNumberField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    @DrawableRes icon_resource : Int
+    @DrawableRes icon_resource : Int,
+    keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions
 
-) {
+    ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         label = { Text(stringResource(label)) },
         leadingIcon = { Icon(painter = painterResource(id = icon_resource),
             contentDescription = null,
@@ -135,7 +160,6 @@ fun EditNumberField(
 
 @Composable
 private fun Slider_4() {
-
 
     var sliderValue by remember {
         mutableStateOf(0)
@@ -184,6 +208,18 @@ private fun calculateTip(
     val tip = tipPercent / 100 * amount
     return NumberFormat.getCurrencyInstance().format(tip)
 }
+
+private fun calculateTotal(
+    amount: Double,
+    tip:
+
+) : String {
+
+}
+
+
+
+
 
 @Preview(showBackground = true)
 @Composable
