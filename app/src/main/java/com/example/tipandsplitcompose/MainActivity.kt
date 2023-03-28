@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
+import com.example.tipandsplitcompose.ui.theme.Yellow900
 import java.text.NumberFormat
 
 class MainActivity : ComponentActivity() {
@@ -35,7 +36,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TipAndSplitComposeTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
@@ -63,15 +63,12 @@ fun TipAndSplitScreen() {
     var sliderValue by remember { mutableStateOf(0) }
 
     val tipPercent = calculateTipPercent(sliderValue)
-
     val tipNr = calculateTip(amount, tipPercent)
     val tip = NumberFormat.getCurrencyInstance().format(tipNr)
 
     val grandTotalNr = calculateTotal(amount, tipNr, roundUp = roundUp)
     val grandTotal = NumberFormat.getCurrencyInstance().format(grandTotalNr)
-
     val personTotal = calculatePersonTotal(grandTotalNr, people)
-
 
 
     Column (
@@ -107,7 +104,7 @@ fun TipAndSplitScreen() {
         )
         Spacer(Modifier.height(24.dp))
 
-        Slider_4(
+        ServiceRatingSlider(
             sliderValue,
             onValueChange = { sliderValue_ ->
                 sliderValue = sliderValue_.toInt()
@@ -166,20 +163,17 @@ fun EditNumberField(
         label = { Text(stringResource(label)) },
         leadingIcon = { Icon(painter = painterResource(id = icon_resource),
             contentDescription = null,
-            tint = Color.Gray,
+            tint = Yellow900,
             modifier = Modifier.size(size = 30.dp) )}
 
     )
 }
 
 @Composable
-private fun Slider_4(
+private fun ServiceRatingSlider(
     sliderValue : Int,
     onValueChange: (Float) -> Unit
-
 ) {
-
-
 
     Text(text = stringResource(R.string.service_question))
     Slider(
@@ -210,7 +204,8 @@ fun RoundTheTipRow(
             checked = roundUp,
             onCheckedChange = onRoundUpChanged,
             colors = SwitchDefaults.colors(
-                uncheckedThumbColor = Color.DarkGray
+                uncheckedThumbColor = Color.DarkGray,
+                checkedThumbColor = Yellow900
             )
         )
     }
