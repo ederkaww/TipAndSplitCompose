@@ -68,7 +68,7 @@ fun TipAndSplitScreen() {
 
     val personTotal = calculatePersonTotal(grandTotalNr, people)
 
-
+    var sliderValue by remember { mutableStateOf(0) }
 
 
     Column (
@@ -104,7 +104,12 @@ fun TipAndSplitScreen() {
         )
         Spacer(Modifier.height(24.dp))
 
-        Slider_4()
+        Slider_4(
+            sliderValue,
+            onValueChange = { sliderValue_ ->
+                sliderValue = sliderValue_.toInt()
+            }
+        )
         Row() {
             Text(
                 text = stringResource(R.string.tip_percent, ""),
@@ -165,16 +170,19 @@ fun EditNumberField(
 }
 
 @Composable
-private fun Slider_4() {
+private fun Slider_4(
+    sliderValue : Int,
+    onValueChange: (Float) -> Unit
 
-    var sliderValue by remember {
-        mutableStateOf(0)
-    }
+) {
+
+
 
     Text(text = "How was the service? "+ sliderValue.toString())
-    Slider(value = sliderValue.toFloat(), onValueChange = { sliderValue_ ->
-        sliderValue = sliderValue_.toInt()
-    }, onValueChangeFinished = {
+    Slider(
+        value = sliderValue.toFloat(),
+        onValueChange = onValueChange,
+        onValueChangeFinished = {
         // funkcja liczaca tip w zaleznosci od jakosci serwisu
         // this is called when the user completed selecting the value
     }, valueRange = 1f..3f, steps = 1
